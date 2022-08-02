@@ -52,13 +52,37 @@
 		ACDA22AC2897E2970045A8FE /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				ACDA22C12897F4970045A8FE /* Application */,
+				ACDA22C32897F50D0045A8FE /* Controllers */,
+				ACDA22C22897F4E10045A8FE /* Resources */,
+			);
+			path = Calculator;
+			sourceTree = "<group>";
+		};
+		ACDA22C12897F4970045A8FE /* Application */ = {
+			isa = PBXGroup;
+			children = (
 				ACDA22AD2897E2970045A8FE /* AppDelegate.swift */,
-				ACDA22B12897E2970045A8FE /* ViewController.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		ACDA22C22897F4E10045A8FE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				ACDA22B62897E29B0045A8FE /* Assets.xcassets */,
 				ACDA22B82897E29B0045A8FE /* LaunchScreen.storyboard */,
 				ACDA22BB2897E29B0045A8FE /* Info.plist */,
 			);
-			path = Calculator;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		ACDA22C32897F50D0045A8FE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				ACDA22B12897E2970045A8FE /* ViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -273,7 +297,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VTP9H54JX3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Calculator/Info.plist;
+				INFOPLIST_FILE = Calculator/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -300,7 +324,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VTP9H54JX3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Calculator/Info.plist;
+				INFOPLIST_FILE = Calculator/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
