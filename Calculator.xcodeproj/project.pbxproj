@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC06F74A289BE42000EEA069 /* ButtonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC06F749289BE42000EEA069 /* ButtonType.swift */; };
+		AC06F74C289C0E4100EEA069 /* UIWindow + isLandscape.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC06F74B289C0E4000EEA069 /* UIWindow + isLandscape.swift */; };
 		ACDA22AE2897E2970045A8FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDA22AD2897E2970045A8FE /* AppDelegate.swift */; };
 		ACDA22B22897E2970045A8FE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDA22B12897E2970045A8FE /* ViewController.swift */; };
 		ACDA22B72897E29B0045A8FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACDA22B62897E29B0045A8FE /* Assets.xcassets */; };
@@ -14,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AC06F749289BE42000EEA069 /* ButtonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonType.swift; sourceTree = "<group>"; };
+		AC06F74B289C0E4000EEA069 /* UIWindow + isLandscape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow + isLandscape.swift"; sourceTree = "<group>"; };
 		ACDA22AA2897E2970045A8FE /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACDA22AD2897E2970045A8FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ACDA22B12897E2970045A8FE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -33,6 +37,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC06F748289BE3FD00EEA069 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AC06F749289BE42000EEA069 /* ButtonType.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		ACDA22A12897E2970045A8FE = {
 			isa = PBXGroup;
 			children = (
@@ -52,7 +64,9 @@
 		ACDA22AC2897E2970045A8FE /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				AC06F748289BE3FD00EEA069 /* Models */,
 				ACDA22C12897F4970045A8FE /* Application */,
+				AC06F74B289C0E4000EEA069 /* UIWindow + isLandscape.swift */,
 				ACDA22C32897F50D0045A8FE /* Controllers */,
 				ACDA22C22897F4E10045A8FE /* Resources */,
 			);
@@ -156,7 +170,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACDA22B22897E2970045A8FE /* ViewController.swift in Sources */,
+				AC06F74A289BE42000EEA069 /* ButtonType.swift in Sources */,
 				ACDA22AE2897E2970045A8FE /* AppDelegate.swift in Sources */,
+				AC06F74C289C0E4100EEA069 /* UIWindow + isLandscape.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

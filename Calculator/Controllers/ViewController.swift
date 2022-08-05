@@ -7,117 +7,111 @@
 
 import UIKit
 
+let mainBackgroundColor = UIColor.black
+
 class ViewController: UIViewController {
     
-    let buttonNames = [
-        ["AC", "+⁄−", " ", "÷"],
-        ["7", "8", "9", "×"],
-        ["4", "5", "6", "-"],
-        ["1", "2", "3", "+"],
-        ["0", " ", " ", "="],
-    ]
+    lazy var gap = view.frame.height / 50
     
+    private let resultLabel: UILabel = {
+        let lable = UILabel()
+        lable.text = "0"
+        lable.textColor = UIColor.white
+        lable.textAlignment = .right
+        lable.font = UIFont(name: "Helvetica", size: 40)
+        lable.adjustsFontSizeToFitWidth = true
+        return lable
+    }()
+    
+    private let verticalStackView: UIStackView = {
+        let verticalStackView = UIStackView()
+        verticalStackView.distribution = .fillEqually
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 10
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        return verticalStackView
+    }()
+    
+    private let horizontalStackviewButton0: UIStackView = {
+        let stackView = createHorizontalStackview(buttonNames[0])
+        return stackView
+    }()
+    
+    private let horizontalStackviewButton1: UIStackView = {
+        let stackView = createHorizontalStackview(buttonNames[1])
+        return stackView
+    }()
+    
+    private let horizontalStackviewButton2: UIStackView = {
+        let stackView = createHorizontalStackview(buttonNames[2])
+        return stackView
+    }()
+    
+    private let horizontalStackviewButton3: UIStackView = {
+        let stackView = createHorizontalStackview(buttonNames[3])
+        return stackView
+    }()
+    
+    private let horizontalStackviewButton4: UIStackView = {
+        let stackView = createHorizontalStackview(buttonNames[4])
+        return stackView
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .red
-    }
-
+        view.backgroundColor = mainBackgroundColor
+        
+        horizontalStackviewButton4.distribution = .fillProportionally
+        let firstView = horizontalStackviewButton4.arrangedSubviews[0]
+        
+        verticalStackView.addArrangedSubview(resultLabel)
+        verticalStackView.addArrangedSubview(horizontalStackviewButton0)
+        verticalStackView.addArrangedSubview(horizontalStackviewButton1)
+        verticalStackView.addArrangedSubview(horizontalStackviewButton2)
+        verticalStackView.addArrangedSubview(horizontalStackviewButton3)
+        verticalStackView.addArrangedSubview(horizontalStackviewButton4)
+        
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(verticalStackView)
+        
+        if UIWindow.isLandscape {
+            NSLayoutConstraint.activate([
+                verticalStackView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.4),
+                verticalStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
+                verticalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                //            verticalStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                verticalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                verticalStackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.9),
+                verticalStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
+                verticalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                //            verticalStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                verticalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
+            ])
+        }
+}
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        
-        let hStack0 = UIStackView()
-        
-        hStack0.translatesAutoresizingMaskIntoConstraints = false
-        hStack0.distribution = .fillEqually
-        hStack0.axis = .horizontal
-        hStack0.spacing = 5
-        
-    
-        let button1 = CalulatorButton()
-        button1.setTitle("1", for: .normal)
-        let button2 = CalulatorButton()
-        button2.setTitle("2", for: .normal)
-        let button3 = CalulatorButton()
-        button3.setTitle("3", for: .normal)
-        
-//        hStack0.addArrangedSubview(button1)
-//        hStack0.addArrangedSubview(button2)
-//        hStack0.addArrangedSubview(button3)
-        
-        let hStack1 = UIStackView()
-        
-        hStack1.translatesAutoresizingMaskIntoConstraints = false
-        hStack1.distribution = .fillEqually
-        hStack1.axis = .horizontal
-        hStack1.spacing = 5
-    
-        let button4 = CalulatorButton()
-        button4.setTitle("4", for: .normal)
-        let button5 = CalulatorButton()
-        button5.setTitle("5", for: .normal)
-        let button6 = CalulatorButton()
-        button6.setTitle("6", for: .normal)
-        
-//        hStack1.addArrangedSubview(button4)
-//        hStack1.addArrangedSubview(button5)
-//        hStack1.addArrangedSubview(button6)
-
-        let hStack2 = UIStackView()
-        //let hStack2 = UIStackView(frame: CGRect(x: 0, y: view.frame.height - (view.frame.width/4)*3, width: view.frame.width/4*3, height: view.frame.width/4))
-        
-        hStack2.translatesAutoresizingMaskIntoConstraints = false
-        hStack2.distribution = .fillEqually
-        hStack2.axis = .horizontal
-        hStack2.spacing = 5
-    
-        let button7 = CalulatorButton()
-        button7.setTitle("7", for: .normal)
-        let button8 = CalulatorButton()
-        button8.setTitle("8", for: .normal)
-        let button9 = CalulatorButton()
-        button9.setTitle("9", for: .normal)
-        
-//        hStack2.addArrangedSubview(button7)
-//        hStack2.addArrangedSubview(button8)
-//        hStack2.addArrangedSubview(button9)
-        
-        
-        
-        
-        
-        let vStack = UIStackView()
-//        vStack.translatesAutoresizingMaskIntoConstraints = false
-        vStack.backgroundColor = .white
-        vStack.distribution = .fillEqually
-        vStack.axis = .vertical
-        vStack.spacing = 5
-        
-        vStack.addArrangedSubview(hStack0)
-        vStack.addArrangedSubview(hStack1)
-        vStack.addArrangedSubview(hStack2)
-        vStack.translatesAutoresizingMaskIntoConstraints = false
-//        vStack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.9).isActive = true
-//        vStack.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9).isActive = true
-//        vStack.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//        vStack.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-
-        view.addSubview(vStack)
-        
-
-        
     }
     
+    override func updateViewConstraints() {
+        super.updateViewConstraints()
+    }
 }
 
 class CalulatorButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        titleLabel?.font = .systemFont(ofSize: super.frame.width/3)
+        titleLabel?.font = .systemFont(ofSize: UIScreen.main.bounds.width > UIScreen.main.bounds.height ? UIScreen.main.bounds.height / 10 : UIScreen.main.bounds.width / 10)
         setTitleColor(.white, for: .normal)
-        backgroundColor = .darkGray
         clipsToBounds = true
+        translatesAutoresizingMaskIntoConstraints = false
     }
 
     @available(*, unavailable)
@@ -127,6 +121,38 @@ class CalulatorButton: UIButton {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = bounds.size.width / 2
+        if UIWindow.isLandscape {
+            layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 7 : bounds.size.width / 23
+        } else {
+            layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 2 : bounds.size.width / 6.5
+        }
     }
 }
+    
+let buttonNames = [
+    ["AC", "+⁄−", " ", "÷"],
+    ["7", "8", "9", "×"],
+    ["4", "5", "6", "-"],
+    ["1", "2", "3", "+"],
+    ["0",  "="],
+]
+
+private func createHorizontalStackview(_ nameButtons: [String]) -> UIStackView {
+    let stackView = UIStackView()
+    let decimalCharacters = CharacterSet.decimalDigits
+    
+    stackView.distribution = .fillEqually
+    stackView.axis = .horizontal
+    stackView.spacing = 10
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    
+    for nameButton in nameButtons {
+        let button = CalulatorButton()
+        button.setTitle(nameButton, for: .normal)
+        button.backgroundColor = (nameButton.rangeOfCharacter(from: decimalCharacters) == nil) ? .systemOrange : .darkGray
+        stackView.addArrangedSubview(button)
+    }
+    
+    return stackView
+}
+
