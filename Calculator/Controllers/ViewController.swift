@@ -7,193 +7,123 @@
 
 import UIKit
 
-let mainBackgroundColor = UIColor.black
-var input = String()
-private var mask = "XXX XXX XXX XXX XXX XXX XXX"
-private let maskNegativ = "- XXX XXX XXX XXX XXX XXX XXX"
-private let replacementCharacter: Character = "X"
+var buttonTypes: [[ButtonType]] {
+    [
+        [.allClear, .negative, .percent, .operation(.division)],
+        [.digit(.seven), .digit(.eight), .digit(.nine), .operation(.multiplication)],
+        [.digit(.four), .digit(.five), .digit(.six), .operation(.subtraction)],
+        [.digit(.one), .digit(.two), .digit(.three), .operation(.addition)],
+        [.digit(.zero), .decimal, .equals]]
+}
 
+var buttonZero = UIButton()
+
+func getButtonSize() -> CGFloat {
+    let screenWidth = UIScreen.main.bounds.width
+    let buttonCount: CGFloat = 3
+    let spacingCount = buttonCount + 1
+    return (screenWidth - (spacingCount * Constants.spacing)) / buttonCount
+}
 
 class ViewController: UIViewController {
-    
-    lazy var gap = view.frame.height / 50
-    
-    private let resultLabel: UILabel = {
-        let lable = UILabel()
-        lable.text = "0"
-        lable.textColor = UIColor.white
-        lable.textAlignment = .right
-        lable.font = UIFont(name: "Helvetica", size: 40)
-        lable.adjustsFontSizeToFitWidth = true
-        return lable
-    }()
-    
-    private let verticalStackView: UIStackView = {
+    var calculator = Calculator()
+    var target: UIViewController!
+
+    var displayText: String {
+        return calculator.displayText
+    }
+
+    let verticalStackView: UIStackView = {
+        let resultLabel: UILabel = {
+            let resultLabel = UILabel()
+            
+            resultLabel.translatesAutoresizingMaskIntoConstraints = false
+            resultLabel.text = "0"
+            resultLabel.textAlignment = .right
+            return resultLabel
+        }()
+        
         let verticalStackView = UIStackView()
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.distribution = .fillEqually
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 10
-        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        verticalStackView.spacing = Constants.spacing
+        
+        verticalStackView.addArrangedSubview(resultLabel)
+        
+        for subArray in buttonTypes {
+            let horizontalStackView = UIStackView()
+            horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+            horizontalStackView.distribution = .fillEqually
+            horizontalStackView.axis = .horizontal
+            horizontalStackView.spacing = Constants.spacing
+
+            for element in subArray {
+                let button = CalculatorButton()
+                button.translatesAutoresizingMaskIntoConstraints = false
+                button.backgroundColor = element.backgroundColor
+                button.layer.cornerRadius = Constants.spacing
+                button.setTitle(element.description, for: .normal)
+                button.addTarget(target, action: #selector(buttonNumberOn), for: .touchUpInside)
+                if element == .digit(.zero) {
+                    buttonZero = button
+                    horizontalStackView.distribution = .fillProportionally
+                }
+                horizontalStackView.addArrangedSubview(button)
+            }
+            verticalStackView.addArrangedSubview(horizontalStackView)
+        }
         return verticalStackView
     }()
     
-    lazy var horizontalStackviewButton0: UIStackView = {
-        let stackView = createHorizontalStackview(buttonNames[0])
-        return stackView
-    }()
     
-    lazy var horizontalStackviewButton1: UIStackView = {
-        let stackView = createHorizontalStackview(buttonNames[1])
-        return stackView
-    }()
-    
-    lazy var horizontalStackviewButton2: UIStackView = {
-        let stackView = createHorizontalStackview(buttonNames[2])
-        return stackView
-    }()
-    
-    lazy var horizontalStackviewButton3: UIStackView = {
-        let stackView = createHorizontalStackview(buttonNames[3])
-        return stackView
-    }()
-    
-    lazy var horizontalStackviewButton4: UIStackView = {
-        let stackView = createHorizontalStackview(buttonNames[4])
-        return stackView
-    }()
+    @objc func buttonNumberOn(_ sender: UIButton) {
+        print(sender.currentTitle!)
+//        res += sender.currentTitle!
+    }
 
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = mainBackgroundColor
-        
-        horizontalStackviewButton4.distribution = .fillProportionally
-        let firstView = horizontalStackviewButton4.arrangedSubviews[0]
-        
-        verticalStackView.addArrangedSubview(resultLabel)
-        verticalStackView.addArrangedSubview(horizontalStackviewButton0)
-        verticalStackView.addArrangedSubview(horizontalStackviewButton1)
-        verticalStackView.addArrangedSubview(horizontalStackviewButton2)
-        verticalStackView.addArrangedSubview(horizontalStackviewButton3)
-        verticalStackView.addArrangedSubview(horizontalStackviewButton4)
-        
-        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(verticalStackView)
+        print(getButtonSize())
         
-        if UIWindow.isLandscape {
-            NSLayoutConstraint.activate([
-                verticalStackView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.4),
-                verticalStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-                verticalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                //            verticalStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                verticalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                verticalStackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.9),
-                verticalStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-                verticalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                //            verticalStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                verticalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
-            ])
-        }
+        NSLayoutConstraint.activate([
+            verticalStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
+            //buttonZero.widthAnchor.constraint(equalToConstant: getButtonSize()*2)
+            //firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
+        ])
+    }
+    
+//    override func updateViewConstraints() {
+//
+//        if UIWindow.isLandscape {
+//            NSLayoutConstraint.activate([
+//                verticalStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+//                verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//                verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//                verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+//                buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
+//                //buttonZero.widthAnchor.constraint(equalToConstant: getButtonSize()*2)
+//                //firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
+//            ])
+//        } else {
+//            NSLayoutConstraint.activate([
+//                verticalStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+//                verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//                verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//                verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+//                buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
+//                //buttonZero.widthAnchor.constraint(equalToConstant: getButtonSize()*2)
+//                //firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
+//            ])
+//        }
+//        super.updateViewConstraints()
+//    }
 }
-
-    
-    override func viewDidLayoutSubviews() {
-    }
-    
-    
-    override func updateViewConstraints() {
-        super.updateViewConstraints()
-    }
-}
-
-class CalulatorButton: UIButton {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        titleLabel?.font = .systemFont(ofSize: UIScreen.main.bounds.width > UIScreen.main.bounds.height ? UIScreen.main.bounds.height / 10 : UIScreen.main.bounds.width / 10)
-        setTitleColor(.white, for: .normal)
-        clipsToBounds = true
-        translatesAutoresizingMaskIntoConstraints = false
-    }
-
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if UIWindow.isLandscape {
-            layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 7 : bounds.size.width / 23
-        } else {
-            layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 2 : bounds.size.width / 6.5
-        }
-    }
-}
-    
-let buttonNames = [
-    ["AC", "+⁄−", " ", "÷"],
-    ["7", "8", "9", "×"],
-    ["4", "5", "6", "-"],
-    ["1", "2", "3", "+"],
-    ["0",  "="],
-]
 
 extension ViewController {
-
-    func createHorizontalStackview(_ nameButtons: [String]) -> UIStackView {
-        let stackView = UIStackView()
-        let decimalCharacters = CharacterSet.decimalDigits
-        
-        stackView.distribution = .fillEqually
-        stackView.axis = .horizontal
-        stackView.spacing = 10
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        for nameButton in nameButtons {
-            let button = CalulatorButton()
-            button.setTitle(nameButton, for: .normal)
-            button.backgroundColor = (nameButton.rangeOfCharacter(from: decimalCharacters) == nil) ? .systemOrange : .darkGray
-            if nameButton.rangeOfCharacter(from: decimalCharacters) != nil {
-                button.addTarget(self, action: #selector(buttonNumberPressed), for: .touchUpInside)
-            }
-            else {
-                button.addTarget(self, action: #selector(buttonOperationPressed), for: .touchUpInside)
-            }
-            stackView.addArrangedSubview(button)
-        }
-        
-        return stackView
-    }
-
-    @objc func buttonNumberPressed(_ sender: UIButton) {
-        print(sender.currentTitle!)
-        input += sender.currentTitle!
-        resultLabel.text = input.applyPatternOnNumbers(pattern: mask, replacementCharacter: replacementCharacter)
-    }
     
-    @objc func buttonOperationPressed(_ sender: UIButton) {
-        print("buttonOperationPressed \(sender.currentTitle!)")
-        input += sender.currentTitle!
-    }
-
-}
-
-extension String {
-    func applyPatternOnNumbers(pattern: String, replacementCharacter: Character) -> String {
-        var pureNumber = self.replacingOccurrences( of: "[^0-9]", with: "", options: .regularExpression)
-        for index in 0 ..< pattern.count {
-            guard index < pureNumber.count else { return pureNumber }
-            let stringIndex = String.Index(utf16Offset: index, in: pattern)
-            let patternCharacter = pattern[stringIndex]
-            guard patternCharacter != replacementCharacter else { continue }
-            pureNumber.insert(patternCharacter, at: stringIndex)
-        }
-        return pureNumber
-    }
 }

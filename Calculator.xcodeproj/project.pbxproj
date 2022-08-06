@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AC06F74A289BE42000EEA069 /* ButtonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC06F749289BE42000EEA069 /* ButtonType.swift */; };
 		AC06F74C289C0E4100EEA069 /* UIWindow + isLandscape.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC06F74B289C0E4000EEA069 /* UIWindow + isLandscape.swift */; };
+		ACB40D07289EAB2D0074E86E /* ButtonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB40D06289EAB2D0074E86E /* ButtonType.swift */; };
+		ACB40D09289EAB6F0074E86E /* Digit.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB40D08289EAB6F0074E86E /* Digit.swift */; };
+		ACB40D0B289EAB8F0074E86E /* ArithmeticOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB40D0A289EAB8F0074E86E /* ArithmeticOperation.swift */; };
+		ACB40D0E289EAC2E0074E86E /* CalculatorButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB40D0D289EAC2E0074E86E /* CalculatorButtonStyle.swift */; };
+		ACB40D11289EACB40074E86E /* CalculatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB40D10289EACB40074E86E /* CalculatorButton.swift */; };
+		ACB40D13289EAF600074E86E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB40D12289EAF600074E86E /* Constants.swift */; };
+		ACB40D15289ED4F30074E86E /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB40D14289ED4F30074E86E /* Calculator.swift */; };
 		ACDA22AE2897E2970045A8FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDA22AD2897E2970045A8FE /* AppDelegate.swift */; };
 		ACDA22B22897E2970045A8FE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDA22B12897E2970045A8FE /* ViewController.swift */; };
 		ACDA22B72897E29B0045A8FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACDA22B62897E29B0045A8FE /* Assets.xcassets */; };
@@ -16,8 +22,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AC06F749289BE42000EEA069 /* ButtonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonType.swift; sourceTree = "<group>"; };
 		AC06F74B289C0E4000EEA069 /* UIWindow + isLandscape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow + isLandscape.swift"; sourceTree = "<group>"; };
+		ACB40D06289EAB2D0074E86E /* ButtonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonType.swift; sourceTree = "<group>"; };
+		ACB40D08289EAB6F0074E86E /* Digit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Digit.swift; sourceTree = "<group>"; };
+		ACB40D0A289EAB8F0074E86E /* ArithmeticOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArithmeticOperation.swift; sourceTree = "<group>"; };
+		ACB40D0D289EAC2E0074E86E /* CalculatorButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorButtonStyle.swift; sourceTree = "<group>"; };
+		ACB40D10289EACB40074E86E /* CalculatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorButton.swift; sourceTree = "<group>"; };
+		ACB40D12289EAF600074E86E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		ACB40D14289ED4F30074E86E /* Calculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculator.swift; sourceTree = "<group>"; };
 		ACDA22AA2897E2970045A8FE /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACDA22AD2897E2970045A8FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ACDA22B12897E2970045A8FE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -40,9 +52,28 @@
 		AC06F748289BE3FD00EEA069 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				AC06F749289BE42000EEA069 /* ButtonType.swift */,
+				ACB40D06289EAB2D0074E86E /* ButtonType.swift */,
+				ACB40D08289EAB6F0074E86E /* Digit.swift */,
+				ACB40D0A289EAB8F0074E86E /* ArithmeticOperation.swift */,
+				ACB40D14289ED4F30074E86E /* Calculator.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		ACB40D0C289EAC080074E86E /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				ACB40D0D289EAC2E0074E86E /* CalculatorButtonStyle.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
+		ACB40D0F289EAC930074E86E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				ACB40D10289EACB40074E86E /* CalculatorButton.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		ACDA22A12897E2970045A8FE = {
@@ -64,11 +95,13 @@
 		ACDA22AC2897E2970045A8FE /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				ACB40D0C289EAC080074E86E /* Styles */,
 				AC06F748289BE3FD00EEA069 /* Models */,
 				ACDA22C12897F4970045A8FE /* Application */,
 				AC06F74B289C0E4000EEA069 /* UIWindow + isLandscape.swift */,
 				ACDA22C32897F50D0045A8FE /* Controllers */,
 				ACDA22C22897F4E10045A8FE /* Resources */,
+				ACB40D12289EAF600074E86E /* Constants.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -94,6 +127,7 @@
 		ACDA22C32897F50D0045A8FE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ACB40D0F289EAC930074E86E /* Components */,
 				ACDA22B12897E2970045A8FE /* ViewController.swift */,
 			);
 			path = Controllers;
@@ -170,9 +204,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACDA22B22897E2970045A8FE /* ViewController.swift in Sources */,
-				AC06F74A289BE42000EEA069 /* ButtonType.swift in Sources */,
+				ACB40D09289EAB6F0074E86E /* Digit.swift in Sources */,
+				ACB40D0E289EAC2E0074E86E /* CalculatorButtonStyle.swift in Sources */,
+				ACB40D15289ED4F30074E86E /* Calculator.swift in Sources */,
+				ACB40D07289EAB2D0074E86E /* ButtonType.swift in Sources */,
+				ACB40D0B289EAB8F0074E86E /* ArithmeticOperation.swift in Sources */,
 				ACDA22AE2897E2970045A8FE /* AppDelegate.swift in Sources */,
 				AC06F74C289C0E4100EEA069 /* UIWindow + isLandscape.swift in Sources */,
+				ACB40D11289EACB40074E86E /* CalculatorButton.swift in Sources */,
+				ACB40D13289EAF600074E86E /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
