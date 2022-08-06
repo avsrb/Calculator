@@ -8,6 +8,11 @@
 import UIKit
 
 let mainBackgroundColor = UIColor.black
+var input = String()
+private var mask = "XXX XXX XXX XXX XXX XXX XXX"
+private let maskNegativ = "- XXX XXX XXX XXX XXX XXX XXX"
+private let replacementCharacter: Character = "X"
+
 
 class ViewController: UIViewController {
     
@@ -32,27 +37,27 @@ class ViewController: UIViewController {
         return verticalStackView
     }()
     
-    private let horizontalStackviewButton0: UIStackView = {
+    lazy var horizontalStackviewButton0: UIStackView = {
         let stackView = createHorizontalStackview(buttonNames[0])
         return stackView
     }()
     
-    private let horizontalStackviewButton1: UIStackView = {
+    lazy var horizontalStackviewButton1: UIStackView = {
         let stackView = createHorizontalStackview(buttonNames[1])
         return stackView
     }()
     
-    private let horizontalStackviewButton2: UIStackView = {
+    lazy var horizontalStackviewButton2: UIStackView = {
         let stackView = createHorizontalStackview(buttonNames[2])
         return stackView
     }()
     
-    private let horizontalStackviewButton3: UIStackView = {
+    lazy var horizontalStackviewButton3: UIStackView = {
         let stackView = createHorizontalStackview(buttonNames[3])
         return stackView
     }()
     
-    private let horizontalStackviewButton4: UIStackView = {
+    lazy var horizontalStackviewButton4: UIStackView = {
         let stackView = createHorizontalStackview(buttonNames[4])
         return stackView
     }()
@@ -96,9 +101,11 @@ class ViewController: UIViewController {
             ])
         }
 }
+
+    
     override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
     }
+    
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
@@ -137,22 +144,56 @@ let buttonNames = [
     ["0",  "="],
 ]
 
-private func createHorizontalStackview(_ nameButtons: [String]) -> UIStackView {
-    let stackView = UIStackView()
-    let decimalCharacters = CharacterSet.decimalDigits
-    
-    stackView.distribution = .fillEqually
-    stackView.axis = .horizontal
-    stackView.spacing = 10
-    stackView.translatesAutoresizingMaskIntoConstraints = false
-    
-    for nameButton in nameButtons {
-        let button = CalulatorButton()
-        button.setTitle(nameButton, for: .normal)
-        button.backgroundColor = (nameButton.rangeOfCharacter(from: decimalCharacters) == nil) ? .systemOrange : .darkGray
-        stackView.addArrangedSubview(button)
+extension ViewController {
+
+    func createHorizontalStackview(_ nameButtons: [String]) -> UIStackView {
+        let stackView = UIStackView()
+        let decimalCharacters = CharacterSet.decimalDigits
+        
+        stackView.distribution = .fillEqually
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        for nameButton in nameButtons {
+            let button = CalulatorButton()
+            button.setTitle(nameButton, for: .normal)
+            button.backgroundColor = (nameButton.rangeOfCharacter(from: decimalCharacters) == nil) ? .systemOrange : .darkGray
+            if nameButton.rangeOfCharacter(from: decimalCharacters) != nil {
+                button.addTarget(self, action: #selector(buttonNumberPressed), for: .touchUpInside)
+            }
+            else {
+                button.addTarget(self, action: #selector(buttonOperationPressed), for: .touchUpInside)
+            }
+            stackView.addArrangedSubview(button)
+        }
+        
+        return stackView
+    }
+
+    @objc func buttonNumberPressed(_ sender: UIButton) {
+        print(sender.currentTitle!)
+        input += sender.currentTitle!
+        resultLabel.text = input.applyPatternOnNumbers(pattern: mask, replacementCharacter: replacementCharacter)
     }
     
-    return stackView
+    @objc func buttonOperationPressed(_ sender: UIButton) {
+        print("buttonOperationPressed \(sender.currentTitle!)")
+        input += sender.currentTitle!
+    }
+
 }
 
+extension String {
+    func applyPatternOnNumbers(pattern: String, replacementCharacter: Character) -> String {
+        var pureNumber = self.replacingOccurrences( of: "[^0-9]", with: "", options: .regularExpression)
+        for index in 0 ..< pattern.count {
+            guard index < pureNumber.count else { return pureNumber }
+            let stringIndex = String.Index(utf16Offset: index, in: pattern)
+            let patternCharacter = pattern[stringIndex]
+            guard patternCharacter != replacementCharacter else { continue }
+            pureNumber.insert(patternCharacter, at: stringIndex)
+        }
+        return pureNumber
+    }
+}
