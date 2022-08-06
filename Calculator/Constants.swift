@@ -1,5 +1,5 @@
 //
-//  ButtonType.swift
+//  Constants.swift
 //  Calculator
 //
 //  Created by Artem Serebriakov on 06.08.2022.
