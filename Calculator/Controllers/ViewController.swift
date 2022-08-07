@@ -26,31 +26,27 @@ func getButtonSize() -> CGFloat {
 }
 
 class ViewController: UIViewController {
-    var calculator = Calculator()
+    var presenter: ViewToPresenterCalculatorProtocol?
     var target: UIViewController!
-
-    var displayText: String {
-        return calculator.displayText
-    }
+    
+    let resultLabel: UILabel = {
+        let resultLabel = UILabel()
+        
+        resultLabel.translatesAutoresizingMaskIntoConstraints = false
+        resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.width > UIScreen.main.bounds.height ? UIScreen.main.bounds.height / 7 : UIScreen.main.bounds.width / 7)
+        resultLabel.text = "0"
+        resultLabel.textAlignment = .right
+        return resultLabel
+    }()
 
     let verticalStackView: UIStackView = {
-        let resultLabel: UILabel = {
-            let resultLabel = UILabel()
-            
-            resultLabel.translatesAutoresizingMaskIntoConstraints = false
-            resultLabel.text = "0"
-            resultLabel.textAlignment = .right
-            return resultLabel
-        }()
         
         let verticalStackView = UIStackView()
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.distribution = .fillEqually
         verticalStackView.axis = .vertical
         verticalStackView.spacing = Constants.spacing
-        
-        verticalStackView.addArrangedSubview(resultLabel)
-        
+                
         for subArray in buttonTypes {
             let horizontalStackView = UIStackView()
             horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,10 +75,12 @@ class ViewController: UIViewController {
     
     @objc func buttonNumberOn(_ sender: UIButton) {
         print(sender.currentTitle!)
+        setDisplayText(sender.currentTitle!)
 //        res += sender.currentTitle!
     }
 
     override func viewDidLoad() {
+        verticalStackView.insertArrangedSubview(resultLabel, at: 0)
         view.addSubview(verticalStackView)
         print(getButtonSize())
         
@@ -93,37 +91,30 @@ class ViewController: UIViewController {
             verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
             //buttonZero.widthAnchor.constraint(equalToConstant: getButtonSize()*2)
-            //firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
         ])
     }
-    
-//    override func updateViewConstraints() {
-//
-//        if UIWindow.isLandscape {
-//            NSLayoutConstraint.activate([
-//                verticalStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-//                verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//                verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//                verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-//                buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
-//                //buttonZero.widthAnchor.constraint(equalToConstant: getButtonSize()*2)
-//                //firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
-//            ])
-//        } else {
-//            NSLayoutConstraint.activate([
-//                verticalStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-//                verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//                verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//                verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-//                buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
-//                //buttonZero.widthAnchor.constraint(equalToConstant: getButtonSize()*2)
-//                //firstView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.673)
-//            ])
-//        }
-//        super.updateViewConstraints()
-//    }
 }
 
-extension ViewController {
+extension ViewController: PresenterToViewCalculatorProtocol {
+    func setDisplayText(_ text: String) {
+        resultLabel.text! += text
+    }
     
+    func clearInput() {
+        resultLabel.text = "0"
+    }
+    
+    func getResult() -> Int? {
+        Int(resultLabel.text ?? "")
+    }
+    
+    func bibError() {
+        return
+    }
+    
+    func switchACButtonTitle(to title: String) {
+        return
+    }
+    
+
 }
