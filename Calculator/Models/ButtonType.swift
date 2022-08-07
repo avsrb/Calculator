@@ -59,3 +59,4 @@ enum ButtonType: Hashable, CustomStringConvertible {
         }
     }
 }
+
