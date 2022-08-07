@@ -33,7 +33,7 @@ class ViewController: UIViewController {
         let resultLabel = UILabel()
         
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
-        resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.width > UIScreen.main.bounds.height ? UIScreen.main.bounds.height / 7 : UIScreen.main.bounds.width / 7)
+        resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.height / 18)
         resultLabel.text = "13"
         resultLabel.textAlignment = .right
         return resultLabel
@@ -94,7 +94,7 @@ class ViewController: UIViewController {
 
 extension ViewController: PresenterToViewCalculatorProtocol {
     func setDisplayText(_ text: String) {
-        resultLabel.text! += text
+        resultLabel.text = text
     }
     
     func clearInput() {

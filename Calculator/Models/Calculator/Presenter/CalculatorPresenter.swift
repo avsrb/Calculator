@@ -12,21 +12,6 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
     weak var view: PresenterToViewCalculatorProtocol?
     let router: PresenterToRouterCalculatorProtocol?
 
-    var output: String = "0"
-    var result: Int = 0
-    var operand: Int?
-    var operation: String?
-    var didCalculation: Bool = false
-    var historyText: String = ""
-    enum Status {
-        case waitForFirstOperand
-        case typingFirstOperand
-        case waitForSecondOperand
-        case typingSecondOperand
-        case didCalculation
-    }
-
-    var status: Status = .waitForFirstOperand
 
     // MARK: Init
 
@@ -39,46 +24,37 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
         guard let buttonTitle = buttonTitle else {
             return
         }
-        if buttonTitle == "AC" {
-            view?.clearInput()
-        }
+        
         switch buttonTitle {
         case "0" ... "9":
-            print(buttonTitle)
-            view?.setDisplayText(buttonTitle)
+            handleDigit(digit: buttonTitle)
+        case ArithmeticOperation.addition.description, ArithmeticOperation.subtraction.description, ArithmeticOperation.multiplication.description, ArithmeticOperation.division.description:
+            handleOperations(operationCharecter: buttonTitle)
+        case ButtonType.negative.description:
+            toggleSign()
+        case ButtonType.equals.description :
+            pushResult(result: 0.1)
+        case ButtonType.allClear.description :
+            view?.setDisplayText("0")
         default:
             return
         }
     }
 
     private func handleDigit(digit: String) {
-
+        let digitInt = Int(digit) ?? 0
+//        currValue = rank < 15 ? currValue * 10 + digitInt : currValue
+//        rank += 1
+//        if rank > 15 { rank = 15 }
+//        view?.setDisplayText(String(currValue))
     }
 
-    private func handleResult() {
-       
-    }
 
     private func handleOperations(operationCharecter: String) {
-       
+        
     }
 
-    private func calculate(result: Double, operation: String, operand: Double) -> Double? {
-        switch operation {
-        case "+":
-            return (result + operand)
-        case "-":
-            return (result - operand)
-        case "*", "×":
-            return (result * operand)
-        case "/", "÷":
-            return (result / operand)
-        default:
-            return nil
-        }
-    }
-
-    private func handlePlusMinus() {
+    private func toggleSign() {
        
     }
 
