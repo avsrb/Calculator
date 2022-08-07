@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
         resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.width > UIScreen.main.bounds.height ? UIScreen.main.bounds.height / 7 : UIScreen.main.bounds.width / 7)
-        resultLabel.text = "0"
+        resultLabel.text = "13"
         resultLabel.textAlignment = .right
         return resultLabel
     }()
@@ -60,14 +60,7 @@ class ViewController: UIViewController {
                 button.backgroundColor = element.backgroundColor
                 button.layer.cornerRadius = Constants.spacing
                 button.setTitle(element.description, for: .normal)
-                switch element {
-                case .digit:
-                    button.addTarget(target, action: #selector(buttonNumberOn), for: .touchUpInside)
-                case .operation:
-                    button.addTarget(target, action: #selector(buttonOperationOn), for: .touchUpInside)
-                default:
-                    button.addTarget(target, action: #selector(buttonCommandOn), for: .touchUpInside)
-                }
+                button.addTarget(target, action: #selector(buttonOn), for: .touchUpInside)
                 if element == .digit(.zero) {
                     buttonZero = button
                     horizontalStackView.distribution = .fillProportionally
@@ -79,30 +72,10 @@ class ViewController: UIViewController {
         return verticalStackView
     }()
     
-    
-    @objc func buttonNumberOn(_ sender: UIButton) {
-        print(sender.currentTitle!)
-        setDisplayText(sender.currentTitle!)
-    }
-    
-    @objc func buttonOperationOn(_ sender: UIButton) {
+    @objc func buttonOn(_ sender: UIButton) {
         presenter?.buttonDidTapped(sender.titleLabel?.text)
     }
-    @objc func buttonCommandOn(_ sender: UIButton) {
-        guard let button = sender.titleLabel!.text else {
-            return
-        }
-        switch button {
-        case ButtonType.allClear.description:
-            clearInput()
-        case ButtonType.negative.description:
-            return
-        default:
-            return
-        }
-    }
     
-
     override func viewDidLoad() {
         verticalStackView.insertArrangedSubview(resultLabel, at: 0)
         view.addSubview(verticalStackView)

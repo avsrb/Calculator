@@ -13,7 +13,7 @@ enum CalculatorAssembly {
     static func createModule() -> UIViewController {
         let viewController = ViewController()
         let router = CalculatorRouter(view: viewController)
-        let presenter = CalculatorPresenter(view: viewController as PresenterToViewCalculatorProtocol, router: router)
+        let presenter = CalculatorPresenter(view: viewController, router: router)
 
         viewController.presenter = presenter
 

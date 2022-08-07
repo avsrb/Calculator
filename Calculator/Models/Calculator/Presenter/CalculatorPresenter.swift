@@ -39,6 +39,16 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
         guard let buttonTitle = buttonTitle else {
             return
         }
+        if buttonTitle == "AC" {
+            view?.clearInput()
+        }
+        switch buttonTitle {
+        case "0" ... "9":
+            print(buttonTitle)
+            view?.setDisplayText(buttonTitle)
+        default:
+            return
+        }
     }
 
     private func handleDigit(digit: String) {
