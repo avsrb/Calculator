@@ -8,57 +8,114 @@
 import Foundation
 
 class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
+    
     // MARK: Properties
     weak var view: PresenterToViewCalculatorProtocol?
     let router: PresenterToRouterCalculatorProtocol?
+   
+    private var number: Int = 0
+    private var newNumber: Int = 0
+    private var result: Int?
+    private var displayText: String = "0"
+    private var currentOperation: ArithmeticOperation!
+    enum Status {
+        case waitForFirstOperand
+        case typingFirstOperand
+        case waitForSecondOperand
+        case typingSecondOperand
+        case didCalculation
+    }
+    var status: Status = .waitForFirstOperand
 
+    private var rank: Int = 0
 
     // MARK: Init
-
     init(view: PresenterToViewCalculatorProtocol, router: PresenterToRouterCalculatorProtocol?) {
         self.view = view
         self.router = router
     }
 
-    func buttonDidTapped(_ buttonTitle: String?) {
+    func performAction(_ buttonTitle: String?) {
         guard let buttonTitle = buttonTitle else {
             return
         }
         
         switch buttonTitle {
         case "0" ... "9":
-            handleDigit(digit: buttonTitle)
+            setDigit(buttonTitle)
         case ArithmeticOperation.addition.description, ArithmeticOperation.subtraction.description, ArithmeticOperation.multiplication.description, ArithmeticOperation.division.description:
-            handleOperations(operationCharecter: buttonTitle)
+            setOperation(buttonTitle)
         case ButtonType.negative.description:
             toggleSign()
         case ButtonType.equals.description :
-            pushResult(result: 0.1)
+            evaluate()
         case ButtonType.allClear.description :
-            view?.setDisplayText("0")
+            allClear()
         default:
-            return
+            break
         }
     }
 
-    private func handleDigit(digit: String) {
-        let digitInt = Int(digit) ?? 0
-//        currValue = rank < 15 ? currValue * 10 + digitInt : currValue
-//        rank += 1
-//        if rank > 15 { rank = 15 }
-//        view?.setDisplayText(String(currValue))
+    func setDigit(_ digit: String) {
+        if (status == .waitForFirstOperand ) {
+            let digitInt = Int(digit)!
+            number = number * 10 + digitInt
+            view?.setDisplayText(String(number))
+        } else if (status == .waitForSecondOperand) {
+            let digitInt = Int(digit)!
+            newNumber = newNumber * 10  + digitInt
+            view?.setDisplayText(String(newNumber))
+        }
     }
 
-
-    private func handleOperations(operationCharecter: String) {
-        
+    func setOperation(_ operation: String) {
+        status = .waitForSecondOperand
+        if operation == "+" {
+            currentOperation = .addition
+        }
+        else if operation == "-" {
+            currentOperation = .subtraction
+        }
+        else if operation == "×" {
+            currentOperation = .multiplication
+        }
+        else if operation == "÷" {
+            currentOperation = .division
+        }
+    }
+    func toggleSign() {
+//        if let number = newNumber {
+//            newNumber = -number
+//            return
+//        }
+//        if let number = result {
+//            result = -number
+//            return
+//        }
+    }
+    
+    func evaluate() {
+        switch currentOperation {
+        case .addition:
+            result = number + newNumber
+        case .subtraction:
+            result =  number - newNumber
+        case .multiplication:
+            result =  number * newNumber
+        case .division:
+            result =  number / newNumber
+        default:
+            break
+        }
+        view?.setDisplayText(String(result!))
     }
 
-    private func toggleSign() {
-       
-    }
-
-    private func pushResult(result: Double) {
-       
-    }
+     func allClear() {
+        number = 0
+        newNumber = 0
+        result = 0
+        currentOperation = .none
+        view?.setDisplayText(String(displayText))
+     }
 }
+

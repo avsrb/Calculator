@@ -13,14 +13,14 @@ var buttonTypes: [[ButtonType]] {
         [.digit(.seven), .digit(.eight), .digit(.nine), .operation(.multiplication)],
         [.digit(.four), .digit(.five), .digit(.six), .operation(.subtraction)],
         [.digit(.one), .digit(.two), .digit(.three), .operation(.addition)],
-        [.digit(.zero), .decimal, .equals]]
+        [.digit(.zero), .equals]]
 }
 
 var buttonZero = UIButton()
 
 func getButtonSize() -> CGFloat {
     let screenWidth = UIScreen.main.bounds.width
-    let buttonCount: CGFloat = 3
+    let buttonCount: CGFloat = 4
     let spacingCount = buttonCount + 1
     return (screenWidth - (spacingCount * Constants.spacing)) / buttonCount
 }
@@ -42,17 +42,17 @@ class ViewController: UIViewController {
     let verticalStackView: UIStackView = {
         
         let verticalStackView = UIStackView()
-        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.distribution = .fillEqually
         verticalStackView.axis = .vertical
         verticalStackView.spacing = Constants.spacing
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
                 
         for subArray in buttonTypes {
             let horizontalStackView = UIStackView()
-            horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
             horizontalStackView.distribution = .fillEqually
             horizontalStackView.axis = .horizontal
             horizontalStackView.spacing = Constants.spacing
+            horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
 
             for element in subArray {
                 let button = CalculatorButton()
@@ -73,45 +73,51 @@ class ViewController: UIViewController {
     }()
     
     @objc func buttonOn(_ sender: UIButton) {
-        presenter?.buttonDidTapped(sender.titleLabel?.text)
+        presenter?.performAction(sender.titleLabel?.text)
     }
     
     override func viewDidLoad() {
         verticalStackView.insertArrangedSubview(resultLabel, at: 0)
         view.addSubview(verticalStackView)
         print(getButtonSize())
-        
+                
         NSLayoutConstraint.activate([
             verticalStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
             verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-            buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
-            //buttonZero.widthAnchor.constraint(equalToConstant: getButtonSize()*2)
+            buttonZero.widthAnchor.constraint(equalToConstant: CGFloat(getButtonSize()*3+6))
         ])
     }
 }
 
 extension ViewController: PresenterToViewCalculatorProtocol {
+    func setOperation(_ operation: String) {
+        return
+    }
+    
+    func toggleSign() {
+        return
+    }
+    
+    func setDecimal(_ digit: Digit) {
+        return
+    }
+    
+    func evaluate() {
+        return
+    }
+    
+    func allClear() {
+        return
+    }
+    
     func setDisplayText(_ text: String) {
         resultLabel.text = text
     }
     
-    func clearInput() {
+    func clear() {
         resultLabel.text = "0"
     }
-    
-    func getResult() -> Int? {
-        Int(resultLabel.text ?? "")
-    }
-    
-    func bibError() {
-        return
-    }
-    
-    func switchACButtonTitle(to title: String) {
-        return
-    }
-    
 
 }

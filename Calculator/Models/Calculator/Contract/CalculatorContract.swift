@@ -10,15 +10,16 @@ import Foundation
 // MARK: View Output (Presenter -> View)
 protocol PresenterToViewCalculatorProtocol: AnyObject {
     func setDisplayText(_ text: String)
-    func clearInput()
-    func getResult() -> Int?
-    func bibError()
-    func switchACButtonTitle(to title: String)
+    func setOperation(_ operation: String)
+    func toggleSign()
+    func setDecimal(_ digit: Digit)
+    func evaluate()
+    func allClear()
 }
 
 // MARK: View Input (View -> Presenter)
 protocol ViewToPresenterCalculatorProtocol: AnyObject {
-    func buttonDidTapped(_ buttonTitle: String?)
+    func performAction(_ buttonTitle: String?)
 }
 
 // MARK: Router Input (Presenter -> Router)
