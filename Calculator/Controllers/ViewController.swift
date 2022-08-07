@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
         resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.height / 18)
-        resultLabel.text = "13"
+        resultLabel.text = "0"
         resultLabel.textAlignment = .right
         return resultLabel
     }()
@@ -82,7 +82,7 @@ class ViewController: UIViewController {
         print(getButtonSize())
                 
         NSLayoutConstraint.activate([
-            verticalStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            verticalStackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8),
             verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),

@@ -69,6 +69,9 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
     }
 
     func setOperation(_ operation: String) {
+        if (status == .didCalculation) {
+            number = result!
+        }
         status = .waitForSecondOperand
         if operation == "+" {
             currentOperation = .addition
@@ -107,15 +110,20 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
         default:
             break
         }
+        number = result!
+        newNumber = 0
+        status = .didCalculation
         view?.setDisplayText(String(result!))
     }
 
      func allClear() {
+        status = .waitForFirstOperand
+        status = .waitForFirstOperand
         number = 0
         newNumber = 0
         result = 0
         currentOperation = .none
-        view?.setDisplayText(String(displayText))
+        view?.setDisplayText(String("0"))
      }
 }
 
