@@ -55,16 +55,18 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
             return
         }
         if isOperation {
-            numberNew = numberNew * 10 + digit
+            numberNew = rank > 14 ? numberNew * 10 + digit : numberNew
             view?.setDisplayText(String(numberNew))
         } else {
-            number = number * 10 + digit
+            number = rank > 14 ? number * 10 + digit : number
             view?.setDisplayText(String(number))
         }
+        rank += 1
         
     }
 
     func setOperation(_ operation: String) {
+        rank = 0
         if isOperation {
             evaluate()
         }
