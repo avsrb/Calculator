@@ -14,20 +14,14 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
     let router: PresenterToRouterCalculatorProtocol?
    
     private var number: Int = 0
-    private var newNumber: Int = 0
-    private var result: Int?
+    private var numberNew: Int = 0
+    private var result: Int = 0
     private var displayText: String = "0"
-    private var currentOperation: ArithmeticOperation!
-    enum Status {
-        case waitForFirstOperand
-        case typingFirstOperand
-        case waitForSecondOperand
-        case typingSecondOperand
-        case didCalculation
-    }
-    var status: Status = .waitForFirstOperand
-
     private var rank: Int = 0
+    private var currentOperation: ArithmeticOperation!
+    
+    var isOperation = false
+
 
     // MARK: Init
     init(view: PresenterToViewCalculatorProtocol, router: PresenterToRouterCalculatorProtocol?) {
@@ -57,22 +51,26 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
     }
 
     func setDigit(_ digit: String) {
-        if (status == .waitForFirstOperand ) {
-            let digitInt = Int(digit)!
-            number = number * 10 + digitInt
-            view?.setDisplayText(String(number))
-        } else if (status == .waitForSecondOperand) {
-            let digitInt = Int(digit)!
-            newNumber = newNumber * 10  + digitInt
-            view?.setDisplayText(String(newNumber))
+        guard let digit = Int(digit) else {
+            return
         }
+        if isOperation {
+            numberNew = numberNew * 10 + digit
+            view?.setDisplayText(String(numberNew))
+        } else {
+            number = number * 10 + digit
+            view?.setDisplayText(String(number))
+        }
+        
     }
 
     func setOperation(_ operation: String) {
-        if (status == .didCalculation) {
-            number = result!
+        if isOperation {
+            evaluate()
         }
-        status = .waitForSecondOperand
+//        } else {
+            isOperation = true
+//        }
         if operation == "+" {
             currentOperation = .addition
         }
@@ -86,44 +84,45 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
             currentOperation = .division
         }
     }
+    
     func toggleSign() {
-//        if let number = newNumber {
-//            newNumber = -number
-//            return
-//        }
-//        if let number = result {
-//            result = -number
-//            return
-//        }
+        number = -number
+        view?.setDisplayText(String(number))
     }
     
     func evaluate() {
         switch currentOperation {
-        case .addition:
-            result = number + newNumber
-        case .subtraction:
-            result =  number - newNumber
-        case .multiplication:
-            result =  number * newNumber
-        case .division:
-            result =  number / newNumber
-        default:
-            break
+            case .addition:
+                result = number + numberNew
+            case .subtraction:
+                result = number - numberNew
+            case .multiplication:
+                result = number * numberNew
+            case .division:
+            if (numberNew == 0) {
+                view?.setDisplayText("Error")
+                return
+            } else {
+                result = number / numberNew
+            }
+            default:
+                break
         }
-        number = result!
-        newNumber = 0
-        status = .didCalculation
-        view?.setDisplayText(String(result!))
+        isOperation = false
+        currentOperation = .none
+        number = result
+        numberNew = 0
+        view?.setDisplayText(String(result))
     }
 
-     func allClear() {
-        status = .waitForFirstOperand
-        status = .waitForFirstOperand
+    func allClear() {
+        isOperation = false
+        numberNew = 0
         number = 0
-        newNumber = 0
         result = 0
         currentOperation = .none
         view?.setDisplayText(String("0"))
-     }
+    }
+    
 }
 

@@ -55,7 +55,16 @@ class ViewController: UIViewController {
             horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
 
             for element in subArray {
-                let button = CalculatorButton()
+                var button: UIButton!
+                switch element {
+                case .digit( _):
+                    button = CalculatorButton()
+                case .operation( _), .equals:
+                    button = ArithmeticOperationButton()
+                default :
+                    button = OperationButton()
+                }
+                
                 button.translatesAutoresizingMaskIntoConstraints = false
                 button.backgroundColor = element.backgroundColor
                 button.layer.cornerRadius = Constants.spacing

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CalculatorButton: UIButton {
+class CalculatorButton: UIButton {
     
     var isWide = false
     
@@ -24,12 +24,52 @@ final class CalculatorButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted ? .white : .darkGray
+        }
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         if UIWindow.isLandscape {
             layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 7 : bounds.size.width / 23
         } else {
             layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 2 : bounds.size.width / 6.5
+        }
+    }
+}
+
+class ArithmeticOperationButton : CalculatorButton {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted ? .white : .orange
+        }
+    }
+}
+
+class OperationButton : CalculatorButton {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted ? .white : .lightGray
         }
     }
 }
