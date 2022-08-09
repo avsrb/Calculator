@@ -18,17 +18,12 @@ var buttonTypes: [[ButtonType]] {
 
 var buttonZero = UIButton()
 
-func getButtonSize() -> CGFloat {
-    let screenWidth = UIScreen.main.bounds.width
-    let buttonCount: CGFloat = 4
-    let spacingCount = buttonCount + 1
-    return (screenWidth - (spacingCount * Constants.spacing)) / buttonCount
-}
-
 class ViewController: UIViewController {
     var presenter: ViewToPresenterCalculatorProtocol?
     var target: UIViewController!
-    
+    var regularConstraints: [NSLayoutConstraint] = []
+    var compactConstraints: [NSLayoutConstraint] = []
+
     let resultLabel: UILabel = {
         let resultLabel = UILabel()
         
@@ -85,18 +80,76 @@ class ViewController: UIViewController {
         presenter?.performAction(sender.titleLabel?.text)
     }
     
+    func getButtonSize() -> CGFloat {
+        let screenWidth = verticalStackView.bounds.width
+        let buttonCount: CGFloat = 4
+        let spacingCount = buttonCount + 1
+        return (screenWidth - (spacingCount * Constants.spacing)) / buttonCount
+    }
+    
     override func viewDidLoad() {
+
+    }
+    
+    
+    override func loadView() {
+        super.loadView()
+        
         verticalStackView.insertArrangedSubview(resultLabel, at: 0)
         view.addSubview(verticalStackView)
-        print(getButtonSize())
-                
-        NSLayoutConstraint.activate([
-            verticalStackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8),
-            verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-            buttonZero.widthAnchor.constraint(equalToConstant: CGFloat(getButtonSize()*3+6))
-        ])
+        buttonZero.translatesAutoresizingMaskIntoConstraints = false
+
+        
+        self.regularConstraints = [
+            verticalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.8),
+            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 65.5/100)
+        ]
+        
+        self.compactConstraints = [
+            verticalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, constant: 20),
+            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 62/100)
+        ]
+        
+        self.activateCurrentConstraints()
+        
+    }
+
+    private func activateCurrentConstraints() {
+        NSLayoutConstraint.deactivate(self.compactConstraints + self.regularConstraints)
+
+        if view.frame.width < view.frame.height {
+            NSLayoutConstraint.activate(self.regularConstraints)
+        }
+        else {
+            NSLayoutConstraint.activate(self.compactConstraints)
+        }
+    }
+    // MARK: - rotation support
+
+    override var shouldAutorotate: Bool {
+        return true
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .allButUpsideDown
+    }
+
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
+    
+    // MARK: - trait collections
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.activateCurrentConstraints()
     }
 }
 
