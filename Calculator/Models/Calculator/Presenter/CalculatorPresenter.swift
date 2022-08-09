@@ -18,10 +18,10 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
     private var result: Int = 0
     private var displayText: String = "0"
     private var rank: Int = 0
-    private var currentOperation: ArithmeticOperation!
+    private var currentOperation: ArithmeticOperation = .empty
+    private var error = false
     
     var isOperation = false
-
 
     // MARK: Init
     init(view: PresenterToViewCalculatorProtocol, router: PresenterToRouterCalculatorProtocol?) {
@@ -48,6 +48,13 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
         default:
             break
         }
+        print("isOperation  \(isOperation)")
+        print("number       \(number)")
+        print("numberNew    \(numberNew)")
+        print("result       \(result)")
+        print("Operation \(currentOperation)")
+        print()
+
     }
 
     func setDigit(_ digit: String) {
@@ -55,10 +62,10 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
             return
         }
         if isOperation {
-            numberNew = rank > 14 ? numberNew * 10 + digit : numberNew
+            numberNew = rank < 12 ? numberNew * 10 + digit : numberNew
             view?.setDisplayText(String(numberNew))
         } else {
-            number = rank > 14 ? number * 10 + digit : number
+            number = rank < 12 ? number * 10 + digit : number
             view?.setDisplayText(String(number))
         }
         rank += 1
@@ -70,19 +77,17 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
         if isOperation {
             evaluate()
         }
-//        } else {
-            isOperation = true
-//        }
-        if operation == "+" {
+        isOperation = true
+        if operation == ArithmeticOperation.addition.description {
             currentOperation = .addition
         }
-        else if operation == "-" {
+        else if operation == ArithmeticOperation.subtraction.description {
             currentOperation = .subtraction
         }
-        else if operation == "×" {
+        else if operation == ArithmeticOperation.multiplication.description {
             currentOperation = .multiplication
         }
-        else if operation == "÷" {
+        else if operation == ArithmeticOperation.division.description {
             currentOperation = .division
         }
     }
@@ -95,34 +100,46 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
     func evaluate() {
         switch currentOperation {
             case .addition:
-                result = number + numberNew
+                result = number &+ numberNew
             case .subtraction:
-                result = number - numberNew
+                result = number &- numberNew
             case .multiplication:
-                result = number * numberNew
+                result = number &* numberNew
             case .division:
             if (numberNew == 0) {
                 view?.setDisplayText("Error")
                 return
             } else {
-                result = number / numberNew
+                result = number & numberNew
             }
             default:
                 break
         }
+        if (result < Int32.min || result > Int32.max) {
+            isOperation = false
+            numberNew = 0
+            number = 0
+            result = 0
+            rank = 0
+            currentOperation = .empty
+            view?.setDisplayText(String("Error"))
+            return
+        }
         isOperation = false
-        currentOperation = .none
+        currentOperation = .empty
         number = result
         numberNew = 0
+        rank = String(result).count
         view?.setDisplayText(String(result))
     }
 
     func allClear() {
+        rank = 0
         isOperation = false
         numberNew = 0
         number = 0
         result = 0
-        currentOperation = .none
+        currentOperation = .empty
         view?.setDisplayText(String("0"))
     }
     

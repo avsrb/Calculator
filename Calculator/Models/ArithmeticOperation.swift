@@ -8,7 +8,7 @@
 import Foundation
 
 enum ArithmeticOperation: CaseIterable, CustomStringConvertible {
-    case addition, subtraction, multiplication, division
+    case addition, subtraction, multiplication, division, empty
     
     var description: String {
         switch self {
@@ -20,6 +20,8 @@ enum ArithmeticOperation: CaseIterable, CustomStringConvertible {
             return "×"
         case .division:
             return "÷"
+        case .empty:
+            return ""
         }
     }
 }

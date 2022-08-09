@@ -18,17 +18,19 @@ var buttonTypes: [[ButtonType]] {
 
 var buttonZero = UIButton()
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
     var presenter: ViewToPresenterCalculatorProtocol?
     var target: UIViewController!
     var regularConstraints: [NSLayoutConstraint] = []
     var compactConstraints: [NSLayoutConstraint] = []
+    var buttonZeroSizeForRegular:CGFloat!
+    var buttonZeroSizeForCompact:CGFloat!
 
     let resultLabel: UILabel = {
         let resultLabel = UILabel()
         
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
-        resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.height / 18)
+        resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.height / 25)
         resultLabel.text = "0"
         resultLabel.textAlignment = .right
         return resultLabel
@@ -81,16 +83,11 @@ class ViewController: UIViewController {
     }
     
     func getButtonSize() -> CGFloat {
-        let screenWidth = verticalStackView.bounds.width
+        let screenWidth = self.view.bounds.size.width
         let buttonCount: CGFloat = 4
         let spacingCount = buttonCount + 1
         return (screenWidth - (spacingCount * Constants.spacing)) / buttonCount
     }
-    
-    override func viewDidLoad() {
-
-    }
-    
     
     override func loadView() {
         super.loadView()
@@ -98,38 +95,41 @@ class ViewController: UIViewController {
         verticalStackView.insertArrangedSubview(resultLabel, at: 0)
         view.addSubview(verticalStackView)
         buttonZero.translatesAutoresizingMaskIntoConstraints = false
-
         
         self.regularConstraints = [
             verticalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.8),
-            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 65.5/100)
+            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            buttonZero.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 67.5/100)
         ]
         
         self.compactConstraints = [
-            verticalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, constant: 20),
-            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            buttonZero.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 62/100)
+            verticalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.9),
+            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            buttonZero.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 67/100)
         ]
         
         self.activateCurrentConstraints()
-        
     }
 
     private func activateCurrentConstraints() {
         NSLayoutConstraint.deactivate(self.compactConstraints + self.regularConstraints)
 
-        if view.frame.width < view.frame.height {
-            NSLayoutConstraint.activate(self.regularConstraints)
+        if self.traitCollection.verticalSizeClass == .regular {
+           NSLayoutConstraint.activate(self.regularConstraints)
         }
         else {
-            NSLayoutConstraint.activate(self.compactConstraints)
+           NSLayoutConstraint.activate(self.compactConstraints)
         }
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     // MARK: - rotation support
 
     override var shouldAutorotate: Bool {
@@ -148,7 +148,6 @@ class ViewController: UIViewController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
         self.activateCurrentConstraints()
     }
 }
