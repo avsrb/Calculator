@@ -62,10 +62,10 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
             return
         }
         if isOperation {
-            numberNew = rank < 12 ? numberNew * 10 + digit : numberNew
+            numberNew = rank < 10 ? numberNew * 10 + digit : numberNew
             view?.setDisplayText(String(numberNew))
         } else {
-            number = rank < 12 ? number * 10 + digit : number
+            number = rank < 10 ? number * 10 + digit : number
             view?.setDisplayText(String(number))
         }
         rank += 1
@@ -110,7 +110,7 @@ class CalculatorPresenter: ViewToPresenterCalculatorProtocol {
                 view?.setDisplayText("Error")
                 return
             } else {
-                result = number & numberNew
+                result = number / numberNew
             }
             default:
                 break
