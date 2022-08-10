@@ -39,9 +39,10 @@ final class ViewController: UIViewController {
         let resultLabel = UILabel()
         
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
-        resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.height / 25)
+        resultLabel.font = .systemFont(ofSize: UIScreen.main.bounds.height / 10)
         resultLabel.text = "0"
         resultLabel.textAlignment = .right
+        resultLabel.adjustsFontSizeToFitWidth = true
         return resultLabel
     }()
 
