@@ -9,11 +9,21 @@ import UIKit
 
 var buttonTypes: [[ButtonType]] {
     [
-        [.allClear, .negative, .percent, .operation(.division)],
-        [.digit(.seven), .digit(.eight), .digit(.nine), .operation(.multiplication)],
-        [.digit(.four), .digit(.five), .digit(.six), .operation(.subtraction)],
-        [.digit(.one), .digit(.two), .digit(.three), .operation(.addition)],
-        [.digit(.zero), .equals]]
+        [.allClear, .negative, .percent],
+        [.digit(.seven), .digit(.eight), .digit(.nine)],
+        [.digit(.four), .digit(.five), .digit(.six)],
+        [.digit(.one), .digit(.two), .digit(.three)],
+        [.digit(.zero)]]
+}
+
+var buttonOperation: [ButtonType] {
+    [
+        .operation(.division),
+        .operation(.multiplication),
+        .operation(.subtraction),
+        .operation(.addition),
+        .equals
+    ]
 }
 
 var buttonZero = UIButton()
@@ -23,8 +33,7 @@ final class ViewController: UIViewController {
     var target: UIViewController!
     var regularConstraints: [NSLayoutConstraint] = []
     var compactConstraints: [NSLayoutConstraint] = []
-    var buttonZeroSizeForRegular:CGFloat!
-    var buttonZeroSizeForCompact:CGFloat!
+    var buttonZeroSize:[NSLayoutConstraint] = []
 
     let resultLabel: UILabel = {
         let resultLabel = UILabel()
@@ -36,7 +45,7 @@ final class ViewController: UIViewController {
         return resultLabel
     }()
 
-    let verticalStackView: UIStackView = {
+    let numberStackView: UIStackView = {
         
         let verticalStackView = UIStackView()
         verticalStackView.distribution = .fillEqually
@@ -78,6 +87,64 @@ final class ViewController: UIViewController {
         return verticalStackView
     }()
     
+    let verticalStackViewOperation: UIStackView = {
+        
+        let verticalStackView = UIStackView()
+        verticalStackView.distribution = .fillEqually
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = Constants.spacing
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+                
+        for element in buttonOperation {
+            let horizontalStackView = UIStackView()
+            horizontalStackView.distribution = .fillEqually
+            horizontalStackView.axis = .horizontal
+            horizontalStackView.spacing = Constants.spacing
+            horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+
+            var button: UIButton!
+            switch element {
+            case .digit( _):
+                button = CalculatorButton()
+            case .operation( _), .equals:
+                button = ArithmeticOperationButton()
+            default :
+                button = OperationButton()
+            }
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.backgroundColor = element.backgroundColor
+            button.layer.cornerRadius = Constants.spacing
+            button.setTitle(element.description, for: .normal)
+            button.addTarget(target, action: #selector(buttonOn), for: .touchUpInside)
+            horizontalStackView.addArrangedSubview(button)
+            
+            verticalStackView.addArrangedSubview(horizontalStackView)
+        }
+        return verticalStackView
+    }()
+    
+    let buttonPodStackView: UIStackView = {
+        
+        let buttonPodStackView = UIStackView()
+        buttonPodStackView.distribution = .fill
+        buttonPodStackView.axis = .horizontal
+        buttonPodStackView.spacing = Constants.spacing
+        buttonPodStackView.translatesAutoresizingMaskIntoConstraints = false
+        return buttonPodStackView
+    }()
+    
+    let finalStackView: UIStackView = {
+        
+        let finalStackView = UIStackView()
+        finalStackView.distribution = .fill
+        finalStackView.axis = .vertical
+        finalStackView.spacing = Constants.spacing
+        finalStackView.translatesAutoresizingMaskIntoConstraints = false
+        return finalStackView
+    }()
+    
+    
+    
     @objc func buttonOn(_ sender: UIButton) {
         presenter?.performAction(sender.titleLabel?.text)
     }
@@ -92,28 +159,38 @@ final class ViewController: UIViewController {
     override func loadView() {
         super.loadView()
         
-        verticalStackView.insertArrangedSubview(resultLabel, at: 0)
-        view.addSubview(verticalStackView)
-        buttonZero.translatesAutoresizingMaskIntoConstraints = false
+        buttonPodStackView.addArrangedSubview(numberStackView)
+        buttonPodStackView.addArrangedSubview(verticalStackViewOperation)
+        finalStackView.addArrangedSubview(resultLabel)
+        finalStackView.addArrangedSubview(buttonPodStackView)
+        view.addSubview(finalStackView)
         
         self.regularConstraints = [
-            verticalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.8),
-            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            buttonZero.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 67.5/100)
+            resultLabel.heightAnchor.constraint(equalToConstant: getButtonSize()),
+            finalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.75),
+            finalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            finalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            finalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            verticalStackViewOperation.widthAnchor.constraint(equalToConstant: getButtonSize())
         ]
         
         self.compactConstraints = [
-            verticalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.9),
-            verticalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            verticalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            verticalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            buttonZero.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 67/100)
+            resultLabel.heightAnchor.constraint(equalToConstant: getButtonSize()),
+            finalStackView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.9),
+            finalStackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            finalStackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            finalStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            verticalStackViewOperation.widthAnchor.constraint(equalToConstant: getButtonSize())
         ]
-        
+                
         self.activateCurrentConstraints()
     }
+    
+    override func viewWillLayoutSubviews() {
+        print(#function)
+
+    }
+    
 
     private func activateCurrentConstraints() {
         NSLayoutConstraint.deactivate(self.compactConstraints + self.regularConstraints)

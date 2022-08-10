@@ -32,7 +32,7 @@ class CalculatorButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if UIWindow.isLandscape {
+        if UIScreen.main.bounds.width > UIScreen.main.bounds.height {
             layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 7 : bounds.size.width / 23
         } else {
             layer.cornerRadius = bounds.size.width < UIScreen.main.bounds.width/2 ? bounds.size.width / 2 : bounds.size.width / 6.5
